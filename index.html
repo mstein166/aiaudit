@@ -6,1030 +6,1030 @@
 <title>PromptTrace — AI Presence Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --surface2: #1a1a24;
-    --accent: #e8ff47;
-    --accent2: #47c4ff;
-    --accent3: #ff6b47;
-    --text: #f0f0f0;
-    --muted: #666680;
-    --border: rgba(255,255,255,0.07);
-  }
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --accent: #e8ff47;
+    --accent2: #47c4ff;
+    --accent3: #ff6b47;
+    --text: #f0f0f0;
+    --muted: #666680;
+    --border: rgba(255,255,255,0.07);
+  }
 
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-
-  html { scroll-behavior: smooth; }
-
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-  }
-
-
-  /* NOISE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 999;
-    opacity: 0.4;
-  }
-
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 60px;
-    backdrop-filter: blur(20px);
-    background: rgba(10,10,15,0.8);
-    border-bottom: 1px solid var(--border);
-  }
-
-
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 1.3rem;
-    letter-spacing: -0.02em;
-  }
-
-
-  .logo span { color: var(--accent); }
-
-
-  nav ul {
-    list-style: none;
-    display: flex;
-    gap: 40px;
-  }
-
-
-  nav ul a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.875rem;
-    font-family: 'DM Mono', monospace;
-    font-weight: 400;
-    transition: color 0.2s;
-  }
-
-
-  nav ul a:hover { color: var(--text); }
-
-
-  .nav-cta {
-    background: var(--accent);
-    color: #0a0a0f !important;
-    padding: 9px 20px;
-    font-weight: 500 !important;
-    transition: all 0.2s !important;
-  }
-
-
-  .nav-cta:hover { background: #fff !important; color: #0a0a0f !important; }
-
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 120px 60px 80px;
-    position: relative;
-    overflow: hidden;
-  }
-
-
-  .hero-glow {
-    position: absolute;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(232,255,71,0.08) 0%, transparent 70%);
-    top: 10%;
-    right: -100px;
-    pointer-events: none;
-  }
-
-
-  .hero-glow2 {
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(71,196,255,0.06) 0%, transparent 70%);
-    bottom: 10%;
-    left: 5%;
-    pointer-events: none;
-  }
-
-
-  .hero-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--accent);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 24px;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.1s forwards;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-
-  .hero-eyebrow::before {
-    content: '';
-    width: 32px;
-    height: 1px;
-    background: var(--accent);
-  }
-
-
-  h1 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(3rem, 7vw, 6.5rem);
-    line-height: 0.95;
-    letter-spacing: -0.03em;
-    max-width: 900px;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.2s forwards;
-  }
-
-
-  h1 .highlight {
-    color: var(--accent);
-    position: relative;
-    display: inline-block;
-  }
-
-
-  .hero-sub {
-    font-size: 1.15rem;
-    color: var(--muted);
-    max-width: 520px;
-    line-height: 1.7;
-    margin-top: 32px;
-    font-weight: 300;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.35s forwards;
-  }
-
-
-  .hero-actions {
-    display: flex;
-    gap: 16px;
-    margin-top: 48px;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.5s forwards;
-  }
-
-
-  .btn-primary {
-    background: var(--accent);
-    color: #0a0a0f;
-    padding: 16px 36px;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 0.01em;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.2s;
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-  }
-
-
-  .btn-primary:hover { background: #fff; transform: translateY(-2px); }
-
-
-  .btn-secondary {
-    background: transparent;
-    color: var(--text);
-    padding: 16px 36px;
-    font-family: 'Syne', sans-serif;
-    font-weight: 600;
-    font-size: 0.95rem;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s;
-  }
-
-
-  .btn-secondary:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
-
-
-  /* TERMINAL DEMO */
-  .terminal-wrapper {
-    margin-top: 80px;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.7s forwards;
-  }
-
-
-  .terminal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    max-width: 720px;
-    overflow: hidden;
-  }
-
-
-  .terminal-bar {
-    background: var(--surface2);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
-
-  .dot { width: 10px; height: 10px; border-radius: 50%; }
-  .dot-r { background: #ff5f57; }
-  .dot-y { background: #febc2e; }
-  .dot-g { background: #28c840; }
-
-
-  .terminal-label {
-    margin-left: auto;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-  }
-
-
-  .terminal-body {
-    padding: 24px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-    line-height: 1.8;
-  }
-
-
-  .t-prompt { color: var(--accent); }
-  .t-text { color: #a0a0c0; }
-  .t-positive { color: #47ff9a; }
-  .t-negative { color: var(--accent3); }
-  .t-neutral { color: var(--accent2); }
-  .t-label { color: var(--muted); }
-  .t-score { font-weight: 500; }
-
-
-  /* STATS */
-  .stats-bar {
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 32px 60px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-  }
-
-
-  .stat {
-    padding: 0 40px;
-    border-right: 1px solid var(--border);
-  }
-
-
-  .stat:first-child { padding-left: 0; }
-  .stat:last-child { border-right: none; }
-
-
-  .stat-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 2.8rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--accent);
-    line-height: 1;
-  }
-
-
-  .stat-label {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-top: 8px;
-    font-family: 'DM Mono', monospace;
-  }
-
-
-  /* HOW IT WORKS */
-  section {
-    padding: 100px 60px;
-  }
-
-
-  .section-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--accent);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-
-  .section-eyebrow::before {
-    content: '';
-    width: 32px;
-    height: 1px;
-    background: var(--accent);
-  }
-
-
-  h2 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    max-width: 700px;
-    margin-bottom: 60px;
-  }
-
-
-  h2 em { color: var(--accent); font-style: normal; }
-
-
-  /* STEPS */
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-  }
-
-
-  .step {
-    background: var(--surface);
-    padding: 40px;
-    border: 1px solid var(--border);
-    position: relative;
-    transition: background 0.3s;
-  }
-
-
-  .step:hover { background: var(--surface2); }
-
-
-  .step-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 4rem;
-    font-weight: 800;
-    color: rgba(232,255,71,0.12);
-    line-height: 1;
-    margin-bottom: 24px;
-    letter-spacing: -0.05em;
-  }
-
-
-  .step h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 12px;
-  }
-
-
-  .step p {
-    color: var(--muted);
-    font-size: 0.9rem;
-    line-height: 1.7;
-  }
-
-
-  /* SERVICES */
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2px;
-  }
-
-
-  .service-card {
-    background: var(--surface);
-    padding: 48px;
-    border: 1px solid var(--border);
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-
-
-  .service-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 0;
-    background: var(--accent);
-    transition: height 0.3s;
-  }
-
-
-  .service-card:hover::before { height: 100%; }
-  .service-card:hover { background: var(--surface2); }
-
-
-  .service-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--accent);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-
-
-  .service-card h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-    letter-spacing: -0.02em;
-  }
-
-
-  .service-card p {
-    color: var(--muted);
-    line-height: 1.7;
-    font-size: 0.9rem;
-  }
-
-
-  .service-price {
-    margin-top: 28px;
-    padding-top: 28px;
-    border-top: 1px solid var(--border);
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: var(--accent);
-  }
-
-
-  .service-price span {
-    font-size: 0.8rem;
-    color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-  }
-
-
-  /* SAMPLE REPORT */
-  .report-section {
-    background: var(--surface);
-    padding: 100px 60px;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-
-
-  .report-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    align-items: start;
-  }
-
-
-  .report-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    padding: 32px;
-  }
-
-
-  .report-card h4 {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-
-  .badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    padding: 3px 8px;
-    background: rgba(232,255,71,0.15);
-    color: var(--accent);
-    letter-spacing: 0.05em;
-  }
-
-
-  .sentiment-bar {
-    margin-bottom: 16px;
-  }
-
-
-  .sentiment-bar-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    margin-bottom: 6px;
-  }
-
-
-  .sentiment-bar-label .brand { color: var(--text); font-weight: 500; }
-  .sentiment-bar-label .score { color: var(--muted); font-family: 'DM Mono', monospace; }
-
-
-  .bar-track {
-    height: 6px;
-    background: rgba(255,255,255,0.06);
-    position: relative;
-    overflow: hidden;
-  }
-
-
-  .bar-fill {
-    height: 100%;
-    transition: width 1s ease;
-  }
-
-
-  .bar-positive { background: #47ff9a; }
-  .bar-neutral { background: var(--accent2); }
-  .bar-negative { background: var(--accent3); }
-
-
-  .mention-item {
-    padding: 16px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.85rem;
-  }
-
-
-  .mention-item:last-child { border-bottom: none; }
-
-
-  .mention-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-  }
-
-
-  .mention-query { color: var(--accent2); font-family: 'DM Mono', monospace; font-size: 0.75rem; }
-  .mention-sentiment { font-size: 0.7rem; padding: 2px 8px; }
-  .ms-positive { background: rgba(71,255,154,0.15); color: #47ff9a; }
-  .ms-negative { background: rgba(255,107,71,0.15); color: var(--accent3); }
-  .ms-neutral { background: rgba(71,196,255,0.15); color: var(--accent2); }
-  .mention-text { color: var(--muted); line-height: 1.5; font-size: 0.82rem; }
-
-
-  /* TESTIMONIALS */
-  .testimonials {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    margin-top: 60px;
-  }
-
-
-  .testimonial {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 40px;
-  }
-
-
-  .testimonial-quote {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: #c0c0d0;
-    margin-bottom: 28px;
-    font-style: italic;
-  }
-
-
-  .testimonial-author {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-
-  .author-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 0.85rem;
-    color: #0a0a0f;
-  }
-
-
-  .author-name { font-weight: 500; font-size: 0.9rem; }
-  .author-title { color: var(--muted); font-size: 0.78rem; }
-
-
-  /* CTA */
-  .cta-section {
-    padding: 120px 60px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-
-  .cta-section::before {
-    content: '';
-    position: absolute;
-    width: 800px;
-    height: 400px;
-    border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(232,255,71,0.06) 0%, transparent 70%);
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-
-
-  .cta-section h2 { margin: 0 auto 24px; text-align: center; max-width: 700px; }
-  .cta-section p { color: var(--muted); max-width: 500px; margin: 0 auto 48px; line-height: 1.7; }
-
-
-  .cta-form {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-
-  .cta-input {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 16px 24px;
-    font-size: 0.9rem;
-    font-family: 'DM Sans', sans-serif;
-    width: 280px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-
-  .cta-input:focus { border-color: var(--accent); }
-  .cta-input::placeholder { color: var(--muted); }
-
-
-  /* FOOTER */
-  footer {
-    padding: 40px 60px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-
-  footer p { color: var(--muted); font-size: 0.8rem; font-family: 'DM Mono', monospace; }
-
-
-  .footer-links { display: flex; gap: 32px; }
-  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.8rem; font-family: 'DM Mono', monospace; transition: color 0.2s; }
-  .footer-links a:hover { color: var(--text); }
-
-
-  /* FAQ */
-  .faq-section {
-    padding: 100px 60px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-  }
-
-
-  .faq-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-  }
-
-
-  .faq-item {
-    border: 1px solid var(--border);
-    background: var(--bg);
-    overflow: hidden;
-    transition: background 0.2s;
-  }
-
-
-  .faq-item:hover { background: var(--surface2); }
-
-
-  .faq-question {
-    width: 100%;
-    background: none;
-    border: none;
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: left;
-    padding: 28px 32px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    letter-spacing: -0.01em;
-  }
-
-
-  .faq-icon {
-    width: 24px;
-    height: 24px;
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 1rem;
-    color: var(--accent);
-    transition: transform 0.3s, background 0.2s;
-    font-family: 'DM Mono', monospace;
-    line-height: 1;
-  }
-
-
-  .faq-item.open .faq-icon {
-    transform: rotate(45deg);
-    background: var(--accent);
-    color: #0a0a0f;
-  }
-
-
-  .faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease, padding 0.3s;
-    padding: 0 32px;
-  }
-
-
-  .faq-item.open .faq-answer {
-    max-height: 300px;
-    padding: 0 32px 28px;
-  }
-
-
-  .faq-answer p {
-    color: var(--muted);
-    font-size: 0.9rem;
-    line-height: 1.75;
-    border-top: 1px solid var(--border);
-    padding-top: 20px;
-  }
-
-
-  /* INQUIRY FORM */
-  .inquiry-section {
-    padding: 100px 60px;
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 80px;
-    align-items: start;
-  }
-
-
-  .inquiry-left h2 { margin-bottom: 20px; }
-
-
-  .inquiry-left p {
-    color: var(--muted);
-    line-height: 1.75;
-    font-size: 0.95rem;
-    margin-bottom: 40px;
-  }
-
-
-  .contact-detail {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 16px;
-  }
-
-
-  .contact-icon {
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    color: var(--accent);
-    flex-shrink: 0;
-  }
-
-
-  .contact-detail span {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--muted);
-  }
-
-
-  .inquiry-form {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 48px;
-  }
-
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-
-
-  .form-group {
-    margin-bottom: 20px;
-  }
-
-
-  .form-group label {
-    display: block;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 13px 16px;
-    font-size: 0.9rem;
-    font-family: 'DM Sans', sans-serif;
-    outline: none;
-    transition: border-color 0.2s;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-
-
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus { border-color: var(--accent); }
-
-
-  .form-group input::placeholder,
-  .form-group textarea::placeholder { color: var(--muted); }
-
-
-  .form-group select option { background: var(--surface); }
-
-
-  .form-group textarea {
-    resize: vertical;
-    min-height: 110px;
-    line-height: 1.6;
-  }
-
-
-  .form-submit {
-    width: 100%;
-    background: var(--accent);
-    color: #0a0a0f;
-    border: none;
-    padding: 16px;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.01em;
-    margin-top: 8px;
-    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-  }
-
-
-  .form-submit:hover { background: #fff; }
-
-
-  .form-note {
-    text-align: center;
-    margin-top: 16px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-  }
-
-
-  .form-success {
-    display: none;
-    text-align: center;
-    padding: 40px 20px;
-  }
-
-
-  .form-success .success-icon { font-size: 2.5rem; margin-bottom: 16px; }
-
-
-  .form-success h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: var(--accent);
-  }
-
-
-  .form-success p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
-
-
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-
-
-  .cursor {
-    display: inline-block;
-    width: 8px;
-    height: 14px;
-    background: var(--accent);
-    animation: blink 1.2s infinite;
-    vertical-align: middle;
-  }
-
-
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    nav { padding: 16px 24px; }
-    nav ul { display: none; }
-    .hero, section { padding-left: 24px; padding-right: 24px; }
-    .stats-bar { grid-template-columns: repeat(2, 1fr); padding: 24px; }
-    .steps, .services-grid, .report-grid, .testimonials { grid-template-columns: 1fr; }
-    .stat { border-right: none; border-bottom: 1px solid var(--border); padding: 20px 0; }
-    footer { flex-direction: column; gap: 20px; text-align: center; }
-    .report-section, .cta-section { padding-left: 24px; padding-right: 24px; }
-    .faq-grid { grid-template-columns: 1fr; }
-    .inquiry-section { grid-template-columns: 1fr; gap: 40px; padding-left: 24px; padding-right: 24px; }
-    .form-row { grid-template-columns: 1fr; }
-    .faq-section { padding-left: 24px; padding-right: 24px; }
-    .inquiry-form { padding: 28px 20px; }
-  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+
+  html { scroll-behavior: smooth; }
+
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 60px;
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,15,0.8);
+    border-bottom: 1px solid var(--border);
+  }
+
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+  }
+
+
+  .logo span { color: var(--accent); }
+
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+  }
+
+
+  nav ul a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-family: 'DM Mono', monospace;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+
+
+  nav ul a:hover { color: var(--text); }
+
+
+  .nav-cta {
+    background: var(--accent);
+    color: #0a0a0f !important;
+    padding: 9px 20px;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+  }
+
+
+  .nav-cta:hover { background: #fff !important; color: #0a0a0f !important; }
+
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+
+  .hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,255,71,0.08) 0%, transparent 70%);
+    top: 10%;
+    right: -100px;
+    pointer-events: none;
+  }
+
+
+  .hero-glow2 {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(71,196,255,0.06) 0%, transparent 70%);
+    bottom: 10%;
+    left: 5%;
+    pointer-events: none;
+  }
+
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.1s forwards;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    max-width: 900px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+
+  h1 .highlight {
+    color: var(--accent);
+    position: relative;
+    display: inline-block;
+  }
+
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-top: 32px;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.35s forwards;
+  }
+
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0f;
+    padding: 16px 36px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+
+
+  .btn-primary:hover { background: #fff; transform: translateY(-2px); }
+
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    padding: 16px 36px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
+
+
+  /* TERMINAL DEMO */
+  .terminal-wrapper {
+    margin-top: 80px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
+
+
+  .terminal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    max-width: 720px;
+    overflow: hidden;
+  }
+
+
+  .terminal-bar {
+    background: var(--surface2);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+
+  .terminal-label {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+
+  .terminal-body {
+    padding: 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.8;
+  }
+
+
+  .t-prompt { color: var(--accent); }
+  .t-text { color: #a0a0c0; }
+  .t-positive { color: #47ff9a; }
+  .t-negative { color: var(--accent3); }
+  .t-neutral { color: var(--accent2); }
+  .t-label { color: var(--muted); }
+  .t-score { font-weight: 500; }
+
+
+  /* STATS */
+  .stats-bar {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 60px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+
+
+  .stat {
+    padding: 0 40px;
+    border-right: 1px solid var(--border);
+  }
+
+
+  .stat:first-child { padding-left: 0; }
+  .stat:last-child { border-right: none; }
+
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+
+
+  /* HOW IT WORKS */
+  section {
+    padding: 100px 60px;
+  }
+
+
+  .section-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+
+  .section-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    max-width: 700px;
+    margin-bottom: 60px;
+  }
+
+
+  h2 em { color: var(--accent); font-style: normal; }
+
+
+  /* STEPS */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+
+  .step {
+    background: var(--surface);
+    padding: 40px;
+    border: 1px solid var(--border);
+    position: relative;
+    transition: background 0.3s;
+  }
+
+
+  .step:hover { background: var(--surface2); }
+
+
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 4rem;
+    font-weight: 800;
+    color: rgba(232,255,71,0.12);
+    line-height: 1;
+    margin-bottom: 24px;
+    letter-spacing: -0.05em;
+  }
+
+
+  .step h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+
+  .step p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+
+  .service-card {
+    background: var(--surface);
+    padding: 48px;
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--accent);
+    transition: height 0.3s;
+  }
+
+
+  .service-card:hover::before { height: 100%; }
+  .service-card:hover { background: var(--surface2); }
+
+
+  .service-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+
+  .service-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+
+
+  .service-card p {
+    color: var(--muted);
+    line-height: 1.7;
+    font-size: 0.9rem;
+  }
+
+
+  .service-price {
+    margin-top: 28px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--accent);
+  }
+
+
+  .service-price span {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+
+
+  /* SAMPLE REPORT */
+  .report-section {
+    background: var(--surface);
+    padding: 100px 60px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+
+  .report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+
+  .report-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 32px;
+  }
+
+
+  .report-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+
+  .badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    background: rgba(232,255,71,0.15);
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+
+  .sentiment-bar {
+    margin-bottom: 16px;
+  }
+
+
+  .sentiment-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+  }
+
+
+  .sentiment-bar-label .brand { color: var(--text); font-weight: 500; }
+  .sentiment-bar-label .score { color: var(--muted); font-family: 'DM Mono', monospace; }
+
+
+  .bar-track {
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+
+  .bar-fill {
+    height: 100%;
+    transition: width 1s ease;
+  }
+
+
+  .bar-positive { background: #47ff9a; }
+  .bar-neutral { background: var(--accent2); }
+  .bar-negative { background: var(--accent3); }
+
+
+  .mention-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+
+
+  .mention-item:last-child { border-bottom: none; }
+
+
+  .mention-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+
+  .mention-query { color: var(--accent2); font-family: 'DM Mono', monospace; font-size: 0.75rem; }
+  .mention-sentiment { font-size: 0.7rem; padding: 2px 8px; }
+  .ms-positive { background: rgba(71,255,154,0.15); color: #47ff9a; }
+  .ms-negative { background: rgba(255,107,71,0.15); color: var(--accent3); }
+  .ms-neutral { background: rgba(71,196,255,0.15); color: var(--accent2); }
+  .mention-text { color: var(--muted); line-height: 1.5; font-size: 0.82rem; }
+
+
+  /* TESTIMONIALS */
+  .testimonials {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+
+
+  .testimonial {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 40px;
+  }
+
+
+  .testimonial-quote {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #c0c0d0;
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+
+  .author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: #0a0a0f;
+  }
+
+
+  .author-name { font-weight: 500; font-size: 0.9rem; }
+  .author-title { color: var(--muted); font-size: 0.78rem; }
+
+
+  /* CTA */
+  .cta-section {
+    padding: 120px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    width: 800px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(232,255,71,0.06) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+
+  .cta-section h2 { margin: 0 auto 24px; text-align: center; max-width: 700px; }
+  .cta-section p { color: var(--muted); max-width: 500px; margin: 0 auto 48px; line-height: 1.7; }
+
+
+  .cta-form {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+
+  .cta-input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 16px 24px;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    width: 280px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+
+  .cta-input:focus { border-color: var(--accent); }
+  .cta-input::placeholder { color: var(--muted); }
+
+
+  /* FOOTER */
+  footer {
+    padding: 40px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+
+  footer p { color: var(--muted); font-size: 0.8rem; font-family: 'DM Mono', monospace; }
+
+
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.8rem; font-family: 'DM Mono', monospace; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--text); }
+
+
+  /* FAQ */
+  .faq-section {
+    padding: 100px 60px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+
+  .faq-item {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+
+
+  .faq-item:hover { background: var(--surface2); }
+
+
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: left;
+    padding: 28px 32px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    letter-spacing: -0.01em;
+  }
+
+
+  .faq-icon {
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+    color: var(--accent);
+    transition: transform 0.3s, background 0.2s;
+    font-family: 'DM Mono', monospace;
+    line-height: 1;
+  }
+
+
+  .faq-item.open .faq-icon {
+    transform: rotate(45deg);
+    background: var(--accent);
+    color: #0a0a0f;
+  }
+
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s;
+    padding: 0 32px;
+  }
+
+
+  .faq-item.open .faq-answer {
+    max-height: 300px;
+    padding: 0 32px 28px;
+  }
+
+
+  .faq-answer p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+
+
+  /* INQUIRY FORM */
+  .inquiry-section {
+    padding: 100px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+
+  .inquiry-left h2 { margin-bottom: 20px; }
+
+
+  .inquiry-left p {
+    color: var(--muted);
+    line-height: 1.75;
+    font-size: 0.95rem;
+    margin-bottom: 40px;
+  }
+
+
+  .contact-detail {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+
+  .contact-icon {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+
+  .contact-detail span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+
+  .inquiry-form {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 48px;
+  }
+
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+
+  .form-group label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 13px 16px;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--accent); }
+
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: var(--muted); }
+
+
+  .form-group select option { background: var(--surface); }
+
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 110px;
+    line-height: 1.6;
+  }
+
+
+  .form-submit {
+    width: 100%;
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+    padding: 16px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+    margin-top: 8px;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+
+
+  .form-submit:hover { background: #fff; }
+
+
+  .form-note {
+    text-align: center;
+    margin-top: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+
+  .form-success .success-icon { font-size: 2.5rem; margin-bottom: 16px; }
+
+
+  .form-success h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+
+
+  .form-success p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--accent);
+    animation: blink 1.2s infinite;
+    vertical-align: middle;
+  }
+
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    nav ul { display: none; }
+    .hero, section { padding-left: 24px; padding-right: 24px; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); padding: 24px; }
+    .steps, .services-grid, .report-grid, .testimonials { grid-template-columns: 1fr; }
+    .stat { border-right: none; border-bottom: 1px solid var(--border); padding: 20px 0; }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+    .report-section, .cta-section { padding-left: 24px; padding-right: 24px; }
+    .faq-grid { grid-template-columns: 1fr; }
+    .inquiry-section { grid-template-columns: 1fr; gap: 40px; padding-left: 24px; padding-right: 24px; }
+    .form-row { grid-template-columns: 1fr; }
+    .faq-section { padding-left: 24px; padding-right: 24px; }
+    .inquiry-form { padding: 28px 20px; }
+  }
 </style>
 </head>
 <body>
@@ -1037,563 +1037,553 @@
 
 <!-- NAV -->
 <nav>
-  <div class="logo">Prompt<span>Trace</span></div>
-  <ul>
-    <li><a href="#how">How It Works</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#sample">Sample Report</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="#contact" class="nav-cta">Get Audited</a></li>
-  </ul>
+  <div class="logo">Prompt<span>Trace</span></div>
+  <ul>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#sample">Sample Report</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact" class="nav-cta">Get Audited</a></li>
+  </ul>
 </nav>
 
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-glow"></div>
-  <div class="hero-glow2"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
 
 
-  <div class="hero-eyebrow">AI Presence Intelligence</div>
+  <div class="hero-eyebrow">AI Presence Intelligence</div>
 
 
-  <h1>
-    What does AI<br>
-    say about your<br>
-    <span class="highlight">business?</span>
-  </h1>
+  <h1>
+    What does AI<br>
+    say about your<br>
+    <span class="highlight">business?</span>
+  </h1>
 
 
-  <p class="hero-sub">
-    Millions of customers now ask AI chatbots for recommendations instead of Googling. PromptTrace audits exactly how Claude, ChatGPT, and Gemini describe you — and your competitors.
-  </p>
+  <p class="hero-sub">
+    Millions of customers now ask AI chatbots for recommendations instead of Googling. PromptTrace audits exactly how Claude, ChatGPT, and Gemini describe you — and your competitors.
+  </p>
 
 
-  <div class="hero-actions">
-    <a href="#contact" class="btn-primary">Request Free Sample Audit</a>
-    <a href="#sample" class="btn-secondary">↓ See Sample Report</a>
-  </div>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Request Free Sample Audit</a>
+    <a href="#sample" class="btn-secondary">↓ See Sample Report</a>
+  </div>
 
 
-  <div class="terminal-wrapper">
-    <div class="terminal">
-      <div class="terminal-bar">
-        <div class="dot dot-r"></div>
-        <div class="dot dot-y"></div>
-        <div class="dot dot-g"></div>
-        <div class="terminal-label">prompttrace — live audit</div>
-      </div>
-      <div class="terminal-body">
-        <div><span class="t-prompt">›</span> <span class="t-text">Running AI audit for: <strong style="color:#f0f0f0">Acme SaaS Co.</strong></span></div>
-        <br>
-        <div><span class="t-label">Querying ChatGPT-4o...</span></div>
-        <div><span class="t-label">Query:</span> <span class="t-neutral">"What's the best project management tool for startups?"</span></div>
-        <div><span class="t-label">Result:</span> <span class="t-positive">MENTIONED — Position #2</span> <span class="t-label">| Sentiment:</span> <span class="t-positive t-score">+0.74 (Positive)</span></div>
-        <br>
-        <div><span class="t-label">Querying Claude 3.7...</span></div>
-        <div><span class="t-label">Query:</span> <span class="t-neutral">"Compare Acme SaaS vs. Rival Corp for enterprise teams"</span></div>
-        <div><span class="t-label">Result:</span> <span class="t-negative">COMPETITOR PREFERRED</span> <span class="t-label">| Sentiment:</span> <span class="t-negative t-score">−0.31 (Negative)</span></div>
-        <br>
-        <div><span class="t-label">Querying Gemini Ultra...</span></div>
-        <div><span class="t-label">Query:</span> <span class="t-neutral">"Best tools for remote team collaboration?"</span></div>
-        <div><span class="t-label">Result:</span> <span class="t-neutral">NOT MENTIONED</span> <span class="t-label">| Visibility gap detected</span></div>
-        <br>
-        <div><span class="t-prompt">›</span> <span class="t-text">Audit complete. Generating report...</span> <span class="cursor"></span></div>
-      </div>
-    </div>
-  </div>
+  <div class="terminal-wrapper">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <div class="terminal-label">prompttrace — live audit</div>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">›</span> <span class="t-text">Running AI audit for: <strong style="color:#f0f0f0">Acme SaaS Co.</strong></span></div>
+        <br>
+        <div><span class="t-label">Querying ChatGPT-4o...</span></div>
+        <div><span class="t-label">Query:</span> <span class="t-neutral">"What's the best project management tool for startups?"</span></div>
+        <div><span class="t-label">Result:</span> <span class="t-positive">MENTIONED — Position #2</span> <span class="t-label">| Sentiment:</span> <span class="t-positive t-score">+0.74 (Positive)</span></div>
+        <br>
+        <div><span class="t-label">Querying Claude 3.7...</span></div>
+        <div><span class="t-label">Query:</span> <span class="t-neutral">"Compare Acme SaaS vs. Rival Corp for enterprise teams"</span></div>
+        <div><span class="t-label">Result:</span> <span class="t-negative">COMPETITOR PREFERRED</span> <span class="t-label">| Sentiment:</span> <span class="t-negative t-score">−0.31 (Negative)</span></div>
+        <br>
+        <div><span class="t-label">Querying Gemini Ultra...</span></div>
+        <div><span class="t-label">Query:</span> <span class="t-neutral">"Best tools for remote team collaboration?"</span></div>
+        <div><span class="t-label">Result:</span> <span class="t-neutral">NOT MENTIONED</span> <span class="t-label">| Visibility gap detected</span></div>
+        <br>
+        <div><span class="t-prompt">›</span> <span class="t-text">Audit complete. Generating report...</span> <span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
 </section>
 
 
 <!-- STATS -->
 <div class="stats-bar">
-  <div class="stat">
-    <div class="stat-num">67%</div>
-    <div class="stat-label">of consumers use AI for purchase recommendations</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">5+</div>
-    <div class="stat-label">major AI models audited per engagement</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">200+</div>
-    <div class="stat-label">unique query variations tested per brand</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">48hr</div>
-    <div class="stat-label">turnaround on standard audit reports</div>
-  </div>
+  <div class="stat">
+    <div class="stat-num">67%</div>
+    <div class="stat-label">of consumers use AI for purchase recommendations</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">5+</div>
+    <div class="stat-label">major AI models audited per engagement</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">200+</div>
+    <div class="stat-label">unique query variations tested per brand</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">48hr</div>
+    <div class="stat-label">turnaround on standard audit reports</div>
+  </div>
 </div>
 
 
 <!-- HOW IT WORKS -->
 <section id="how">
-  <div class="section-eyebrow">Process</div>
-  <h2>Your brand. Under the <em>AI microscope.</em></h2>
+  <div class="section-eyebrow">Process</div>
+  <h2>Your brand. Under the <em>AI microscope.</em></h2>
 
 
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">01</div>
-      <h3>Discovery Brief</h3>
-      <p>We learn your brand, key competitors, target audience, and the queries your customers are most likely to type into AI tools. You define what winning looks like.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <h3>Multi-Model Audit</h3>
-      <p>Our team runs hundreds of carefully crafted prompts across ChatGPT, Claude, Gemini, Perplexity, and Copilot — capturing raw outputs, sentiment scores, and competitive positioning.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <h3>Intelligence Report</h3>
-      <p>You receive a comprehensive report with sentiment scoring, visibility gaps, competitor analysis, and a concrete action plan to improve your AI presence over time.</p>
-    </div>
-  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Discovery Brief</h3>
+      <p>We learn your brand, key competitors, target audience, and the queries your customers are most likely to type into AI tools. You define what winning looks like.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>Multi-Model Audit</h3>
+      <p>Our team runs hundreds of carefully crafted prompts across ChatGPT, Claude, Gemini, Perplexity, and Copilot — capturing raw outputs, sentiment scores, and competitive positioning.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Intelligence Report</h3>
+      <p>You receive a comprehensive report with sentiment scoring, visibility gaps, competitor analysis, and a concrete action plan to improve your AI presence over time.</p>
+    </div>
+  </div>
 </section>
 
 
 <!-- SERVICES -->
 <section id="services" style="padding-top: 0;">
-  <div class="section-eyebrow">Services</div>
-  <h2>Audit packages for every <em>stage of growth.</em></h2>
+  <div class="section-eyebrow">Services</div>
+  <h2>Audit packages for every <em>stage of growth.</em></h2>
 
 
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-tag">Starter</div>
-      <h3>Brand Snapshot</h3>
-      <p>A focused audit of your brand across 3 AI models and 50 targeted queries. Ideal for businesses new to AI presence management who want a clear baseline before investing more.</p>
-      <div style="margin-top: 20px;">
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;3 AI models (ChatGPT, Claude, Gemini)</div>
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;50 query variations</div>
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Sentiment scoring & summary</div>
-        <div style="font-size:0.8rem; color:var(--muted);">✓ &nbsp;1 competitor comparison</div>
-      </div>
-      <div class="service-price">$500 <span>/ one-time</span></div>
-    </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-tag">Starter</div>
+      <h3>Brand Snapshot</h3>
+      <p>A focused audit of your brand across 3 AI models and 50 targeted queries. Ideal for businesses new to AI presence management who want a clear baseline before investing more.</p>
+      <div style="margin-top: 20px;">
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;3 AI models (ChatGPT, Claude, Gemini)</div>
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;50 query variations</div>
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Sentiment scoring & summary</div>
+        <div style="font-size:0.8rem; color:var(--muted);">✓ &nbsp;1 competitor comparison</div>
+      </div>
+      <div class="service-price">$500 <span>/ one-time</span></div>
+    </div>
 
 
-    <div class="service-card">
-      <div class="service-tag">Professional</div>
-      <h3>Competitive Intelligence</h3>
-      <p>Deep-dive audit across 5 AI platforms with full competitor benchmarking. Includes a strategic action plan with specific recommendations to close visibility gaps and shift sentiment.</p>
-      <div style="margin-top: 20px;">
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;5 AI models including Perplexity & Copilot</div>
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;200 query variations</div>
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Up to 5 competitors analyzed</div>
-        <div style="font-size:0.8rem; color:var(--muted);">✓ &nbsp;Action plan + 60-min strategy call</div>
-      </div>
-      <div class="service-price">$1,800 <span>/ one-time</span></div>
-    </div>
+    <div class="service-card">
+      <div class="service-tag">Professional</div>
+      <h3>Competitive Intelligence</h3>
+      <p>Deep-dive audit across 5 AI platforms with full competitor benchmarking. Includes a strategic action plan with specific recommendations to close visibility gaps and shift sentiment.</p>
+      <div style="margin-top: 20px;">
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;5 AI models including Perplexity & Copilot</div>
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;200 query variations</div>
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Up to 5 competitors analyzed</div>
+        <div style="font-size:0.8rem; color:var(--muted);">✓ &nbsp;Action plan + 60-min strategy call</div>
+      </div>
+      <div class="service-price">$1,800 <span>/ one-time</span></div>
+    </div>
 
 
-    <div class="service-card">
-      <div class="service-tag">Retainer</div>
-      <h3>Ongoing Monitoring</h3>
-      <p>Monthly audits to track how your AI presence evolves over time. As AI models update, your perception changes. Stay ahead with continuous monitoring and quarterly strategy reviews.</p>
-      <div style="margin-top: 20px;">
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Monthly full-platform audits</div>
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Trend tracking & delta reports</div>
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Quarterly strategy sessions</div>
-        <div style="font-size:0.8rem; color:var(--muted);">✓ &nbsp;Slack/email alerts on major shifts</div>
-      </div>
-      <div class="service-price">$900 <span>/ month</span></div>
-    </div>
+    <div class="service-card">
+      <div class="service-tag">Retainer</div>
+      <h3>Ongoing Monitoring</h3>
+      <p>Monthly audits to track how your AI presence evolves over time. As AI models update, your perception changes. Stay ahead with continuous monitoring and quarterly strategy reviews.</p>
+      <div style="margin-top: 20px;">
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Monthly full-platform audits</div>
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Trend tracking & delta reports</div>
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Quarterly strategy sessions</div>
+        <div style="font-size:0.8rem; color:var(--muted);">✓ &nbsp;Slack/email alerts on major shifts</div>
+      </div>
+      <div class="service-price">$900 <span>/ month</span></div>
+    </div>
 
 
-    <div class="service-card">
-      <div class="service-tag">Enterprise</div>
-      <h3>Custom Program</h3>
-      <p>For enterprise brands, agencies, or multi-brand portfolios. Custom query sets, industry-specific AI analysis, white-label reporting for agencies, and dedicated analyst support.</p>
-      <div style="margin-top: 20px;">
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;All platforms + custom models</div>
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;White-label reports for agencies</div>
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Multi-brand / multi-market coverage</div>
-        <div style="font-size:0.8rem; color:var(--muted);">✓ &nbsp;Dedicated analyst + SLA</div>
-      </div>
-      <div class="service-price">Custom <span>/ contact us</span></div>
-    </div>
-  </div>
+    <div class="service-card">
+      <div class="service-tag">Enterprise</div>
+      <h3>Custom Program</h3>
+      <p>For enterprise brands, agencies, or multi-brand portfolios. Custom query sets, industry-specific AI analysis, white-label reporting for agencies, and dedicated analyst support.</p>
+      <div style="margin-top: 20px;">
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;All platforms + custom models</div>
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;White-label reports for agencies</div>
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;">✓ &nbsp;Multi-brand / multi-market coverage</div>
+        <div style="font-size:0.8rem; color:var(--muted);">✓ &nbsp;Dedicated analyst + SLA</div>
+      </div>
+      <div class="service-price">Custom <span>/ contact us</span></div>
+    </div>
+  </div>
 </section>
 
 
 <!-- SAMPLE REPORT -->
 <div class="report-section" id="sample">
-  <div class="section-eyebrow">Sample Output</div>
-  <h2 style="max-width:700px; margin-bottom: 48px;">A glimpse into your <em>AI presence report.</em></h2>
+  <div class="section-eyebrow">Sample Output</div>
+  <h2 style="max-width:700px; margin-bottom: 48px;">A glimpse into your <em>AI presence report.</em></h2>
 
 
-  <div class="report-grid">
-    <div>
-      <div class="report-card" style="margin-bottom: 16px;">
-        <h4>Sentiment Scores — ChatGPT <span class="badge">LIVE SAMPLE</span></h4>
-        <div class="sentiment-bar">
-          <div class="sentiment-bar-label">
-            <span class="brand">Acme SaaS</span><span class="score">+0.74</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill bar-positive" style="width:74%"></div></div>
-        </div>
-        <div class="sentiment-bar">
-          <div class="sentiment-bar-label">
-            <span class="brand">Rival Corp</span><span class="score">+0.81</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill bar-positive" style="width:81%"></div></div>
-        </div>
-        <div class="sentiment-bar">
-          <div class="sentiment-bar-label">
-            <span class="brand">AltTools Inc</span><span class="score">+0.55</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill bar-neutral" style="width:55%"></div></div>
-        </div>
-        <div class="sentiment-bar">
-          <div class="sentiment-bar-label">
-            <span class="brand">GenericSoft</span><span class="score">+0.22</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill bar-negative" style="width:22%"></div></div>
-        </div>
-      </div>
+  <div class="report-grid">
+    <div>
+      <div class="report-card" style="margin-bottom: 16px;">
+        <h4>Sentiment Scores — ChatGPT <span class="badge">LIVE SAMPLE</span></h4>
+        <div class="sentiment-bar">
+          <div class="sentiment-bar-label">
+            <span class="brand">Acme SaaS</span><span class="score">+0.74</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-positive" style="width:74%"></div></div>
+        </div>
+        <div class="sentiment-bar">
+          <div class="sentiment-bar-label">
+            <span class="brand">Rival Corp</span><span class="score">+0.81</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-positive" style="width:81%"></div></div>
+        </div>
+        <div class="sentiment-bar">
+          <div class="sentiment-bar-label">
+            <span class="brand">AltTools Inc</span><span class="score">+0.55</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-neutral" style="width:55%"></div></div>
+        </div>
+        <div class="sentiment-bar">
+          <div class="sentiment-bar-label">
+            <span class="brand">GenericSoft</span><span class="score">+0.22</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-negative" style="width:22%"></div></div>
+        </div>
+      </div>
 
 
-      <div class="report-card">
-        <h4>Visibility Rate by Platform</h4>
-        <div class="sentiment-bar">
-          <div class="sentiment-bar-label">
-            <span class="brand">ChatGPT</span><span class="score">82%</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill bar-positive" style="width:82%"></div></div>
-        </div>
-        <div class="sentiment-bar">
-          <div class="sentiment-bar-label">
-            <span class="brand">Claude</span><span class="score">61%</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill bar-neutral" style="width:61%"></div></div>
-        </div>
-        <div class="sentiment-bar">
-          <div class="sentiment-bar-label">
-            <span class="brand">Gemini</span><span class="score">44%</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill bar-neutral" style="width:44%"></div></div>
-        </div>
-        <div class="sentiment-bar">
-          <div class="sentiment-bar-label">
-            <span class="brand">Perplexity</span><span class="score">29%</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill bar-negative" style="width:29%"></div></div>
-        </div>
-      </div>
-    </div>
+      <div class="report-card">
+        <h4>Visibility Rate by Platform</h4>
+        <div class="sentiment-bar">
+          <div class="sentiment-bar-label">
+            <span class="brand">ChatGPT</span><span class="score">82%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-positive" style="width:82%"></div></div>
+        </div>
+        <div class="sentiment-bar">
+          <div class="sentiment-bar-label">
+            <span class="brand">Claude</span><span class="score">61%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-neutral" style="width:61%"></div></div>
+        </div>
+        <div class="sentiment-bar">
+          <div class="sentiment-bar-label">
+            <span class="brand">Gemini</span><span class="score">44%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-neutral" style="width:44%"></div></div>
+        </div>
+        <div class="sentiment-bar">
+          <div class="sentiment-bar-label">
+            <span class="brand">Perplexity</span><span class="score">29%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-negative" style="width:29%"></div></div>
+        </div>
+      </div>
+    </div>
 
 
-    <div>
-      <div class="report-card">
-        <h4>Notable AI Responses</h4>
+    <div>
+      <div class="report-card">
+        <h4>Notable AI Responses</h4>
 
 
-        <div class="mention-item">
-          <div class="mention-header">
-            <span class="mention-query">"best CRM for B2B startups"</span>
-            <span class="mention-sentiment ms-positive">Positive</span>
-          </div>
-          <p class="mention-text">Claude ranked Acme SaaS first among 5 tools, citing ease of onboarding and pipeline visibility as key differentiators vs Salesforce.</p>
-        </div>
+        <div class="mention-item">
+          <div class="mention-header">
+            <span class="mention-query">"best CRM for B2B startups"</span>
+            <span class="mention-sentiment ms-positive">Positive</span>
+          </div>
+          <p class="mention-text">Claude ranked Acme SaaS first among 5 tools, citing ease of onboarding and pipeline visibility as key differentiators vs Salesforce.</p>
+        </div>
 
 
-        <div class="mention-item">
-          <div class="mention-header">
-            <span class="mention-query">"Acme vs Rival Corp — which is better?"</span>
-            <span class="mention-sentiment ms-negative">Negative</span>
-          </div>
-          <p class="mention-text">ChatGPT recommended Rival Corp for enterprise teams, noting Acme's reported "limited integrations" — an outdated perception tied to 2022 articles.</p>
-        </div>
+        <div class="mention-item">
+          <div class="mention-header">
+            <span class="mention-query">"Acme vs Rival Corp — which is better?"</span>
+            <span class="mention-sentiment ms-negative">Negative</span>
+          </div>
+          <p class="mention-text">ChatGPT recommended Rival Corp for enterprise teams, noting Acme's reported "limited integrations" — an outdated perception tied to 2022 articles.</p>
+        </div>
 
 
-        <div class="mention-item">
-          <div class="mention-header">
-            <span class="mention-query">"affordable project tools for agencies"</span>
-            <span class="mention-sentiment ms-neutral">Neutral</span>
-          </div>
-          <p class="mention-text">Gemini listed Acme alongside 4 competitors with no strong differentiation. Opportunity to improve category positioning through content strategy.</p>
-        </div>
+        <div class="mention-item">
+          <div class="mention-header">
+            <span class="mention-query">"affordable project tools for agencies"</span>
+            <span class="mention-sentiment ms-neutral">Neutral</span>
+          </div>
+          <p class="mention-text">Gemini listed Acme alongside 4 competitors with no strong differentiation. Opportunity to improve category positioning through content strategy.</p>
+        </div>
 
 
-        <div class="mention-item" style="border-bottom:none">
-          <div class="mention-header">
-            <span class="mention-query">"top SaaS tools 2024 for remote teams"</span>
-            <span class="mention-sentiment ms-negative">Not Mentioned</span>
-          </div>
-          <p class="mention-text">Perplexity did not surface Acme in this high-intent category despite strong product fit. Gap likely caused by thin web citation coverage.</p>
-        </div>
-      </div>
-    </div>
-  </div>
+        <div class="mention-item" style="border-bottom:none">
+          <div class="mention-header">
+            <span class="mention-query">"top SaaS tools 2024 for remote teams"</span>
+            <span class="mention-sentiment ms-negative">Not Mentioned</span>
+          </div>
+          <p class="mention-text">Perplexity did not surface Acme in this high-intent category despite strong product fit. Gap likely caused by thin web citation coverage.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 
 <!-- TESTIMONIALS -->
 <section>
-  <div class="section-eyebrow">Social Proof</div>
-  <h2>Trusted by brands who take <em>AI visibility seriously.</em></h2>
+  <div class="section-eyebrow">Social Proof</div>
+  <h2>Trusted by brands who take <em>AI visibility seriously.</em></h2>
 
 
-  <div class="testimonials">
-    <div class="testimonial">
-      <p class="testimonial-quote">"We assumed our AI presence was fine because our SEO was strong. PromptTrace showed us that ChatGPT was actually recommending our biggest competitor over us in 7 out of 10 relevant queries. Eye-opening."</p>
-      <div class="testimonial-author">
-        <div class="author-avatar" style="background: var(--accent);">JM</div>
-        <div>
-          <div class="author-name">Jamie M.</div>
-          <div class="author-title">CMO, TechStack Pro</div>
-        </div>
-      </div>
-    </div>
+  <div class="testimonials">
+    <div class="testimonial">
+      <p class="testimonial-quote">"We assumed our AI presence was fine because our SEO was strong. PromptTrace showed us that ChatGPT was actually recommending our biggest competitor over us in 7 out of 10 relevant queries. Eye-opening."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background: var(--accent);">JM</div>
+        <div>
+          <div class="author-name">Jamie M.</div>
+          <div class="author-title">CMO, TechStack Pro</div>
+        </div>
+      </div>
+    </div>
 
 
-    <div class="testimonial">
-      <p class="testimonial-quote">"The competitive benchmarking alone was worth 10x the cost. We found out a competitor was consistently ranked #1 in Claude responses because of one widely cited study. We published a better one within a month."</p>
-      <div class="testimonial-author">
-        <div class="author-avatar" style="background: var(--accent2);">SR</div>
-        <div>
-          <div class="author-name">Sarah R.</div>
-          <div class="author-title">VP Marketing, NovaPlatform</div>
-        </div>
-      </div>
-    </div>
+    <div class="testimonial">
+      <p class="testimonial-quote">"The competitive benchmarking alone was worth 10x the cost. We found out a competitor was consistently ranked #1 in Claude responses because of one widely cited study. We published a better one within a month."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background: var(--accent2);">SR</div>
+        <div>
+          <div class="author-name">Sarah R.</div>
+          <div class="author-title">VP Marketing, NovaPlatform</div>
+        </div>
+      </div>
+    </div>
 
 
-    <div class="testimonial">
-      <p class="testimonial-quote">"As an agency we now offer AI presence audits to every new client as part of our onboarding. We white-label PromptTrace reports and it's become a genuine differentiator for us."</p>
-      <div class="testimonial-author">
-        <div class="author-avatar" style="background: var(--accent3);">DK</div>
-        <div>
-          <div class="author-name">David K.</div>
-          <div class="author-title">Founder, Apex Growth Agency</div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <div class="testimonial">
+      <p class="testimonial-quote">"As an agency we now offer AI presence audits to every new client as part of our onboarding. We white-label PromptTrace reports and it's become a genuine differentiator for us."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background: var(--accent3);">DK</div>
+        <div>
+          <div class="author-name">David K.</div>
+          <div class="author-title">Founder, Apex Growth Agency</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 
 <!-- FAQ -->
 <section class="faq-section" id="faq">
-  <div class="section-eyebrow">FAQ</div>
-  <h2 style="margin-bottom: 48px;">Questions we <em>always get asked.</em></h2>
+  <div class="section-eyebrow">FAQ</div>
+  <h2 style="margin-bottom: 48px;">Questions we <em>always get asked.</em></h2>
 
 
-  <div class="faq-grid">
+  <div class="faq-grid">
 
 
-    <div class="faq-item">
-      <button class="faq-question" onclick="toggleFaq(this)">
-        How is this different from regular SEO?
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>SEO optimizes your visibility on search engines like Google, where rankings are based on links, keywords, and technical factors. AI presence is entirely different — chatbots like Claude and ChatGPT form opinions based on their training data, cited articles, and how your brand is discussed across the web. You can have perfect SEO and still be described negatively (or not at all) by AI tools. We focus exclusively on this AI layer.</p>
-      </div>
-    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        How is this different from regular SEO?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>SEO optimizes your visibility on search engines like Google, where rankings are based on links, keywords, and technical factors. AI presence is entirely different — chatbots like Claude and ChatGPT form opinions based on their training data, cited articles, and how your brand is discussed across the web. You can have perfect SEO and still be described negatively (or not at all) by AI tools. We focus exclusively on this AI layer.</p>
+      </div>
+    </div>
 
 
-    <div class="faq-item">
-      <button class="faq-question" onclick="toggleFaq(this)">
-        Which AI platforms do you audit?
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>Our standard audits cover ChatGPT (GPT-4o), Claude (Anthropic), Google Gemini, Perplexity AI, and Microsoft Copilot. These five represent the vast majority of AI-assisted consumer and business decision-making today. Enterprise clients can request additional or custom platforms.</p>
-      </div>
-    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Which AI platforms do you audit?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>Our standard audits cover ChatGPT (GPT-4o), Claude (Anthropic), Google Gemini, Perplexity AI, and Microsoft Copilot. These five represent the vast majority of AI-assisted consumer and business decision-making today. Enterprise clients can request additional or custom platforms.</p>
+      </div>
+    </div>
 
 
-    <div class="faq-item">
-      <button class="faq-question" onclick="toggleFaq(this)">
-        Can you actually change what AI says about us?
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>We can't directly edit AI models — nobody can. But AI outputs are heavily influenced by what's published and cited online. Our action plans identify the specific content gaps, outdated references, and missing citations that are shaping your current AI perception — and we show you exactly what to create or update to shift it over time.</p>
-      </div>
-    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Can you actually change what AI says about us?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>We can't directly edit AI models — nobody can. But AI outputs are heavily influenced by what's published and cited online. Our action plans identify the specific content gaps, outdated references, and missing citations that are shaping your current AI perception — and we show you exactly what to create or update to shift it over time.</p>
+      </div>
+    </div>
 
 
-    <div class="faq-item">
-      <button class="faq-question" onclick="toggleFaq(this)">
-        How long does an audit take?
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>The Brand Snapshot delivers within 48 hours. The Competitive Intelligence package takes 5–7 business days due to the volume of queries, competitor analysis, and strategy documentation. Ongoing retainer reports are delivered on the same date each month with a 3-day SLA for emergency alerts.</p>
-      </div>
-    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        How long does an audit take?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>The Brand Snapshot delivers within 48 hours. The Competitive Intelligence package takes 5–7 business days due to the volume of queries, competitor analysis, and strategy documentation. Ongoing retainer reports are delivered on the same date each month with a 3-day SLA for emergency alerts.</p>
+      </div>
+    </div>
 
 
-    <div class="faq-item">
-      <button class="faq-question" onclick="toggleFaq(this)">
-        Do AI models get updated? Will our report go stale?
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>Yes — this is exactly why our retainer exists. AI models are updated every few months, and their outputs can shift noticeably with each update. A competitor publishing a widely-cited study can change AI sentiment toward you within weeks. One-time audits give you a snapshot; monthly monitoring keeps you informed as the landscape evolves.</p>
-      </div>
-    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Do AI models get updated? Will our report go stale?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>Yes — this is exactly why our retainer exists. AI models are updated every few months, and their outputs can shift noticeably with each update. A competitor publishing a widely-cited study can change AI sentiment toward you within weeks. One-time audits give you a snapshot; monthly monitoring keeps you informed as the landscape evolves.</p>
+      </div>
+    </div>
 
 
-    <div class="faq-item">
-      <button class="faq-question" onclick="toggleFaq(this)">
-        Do you offer white-label reports for agencies?
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>Yes. Our Enterprise tier is built specifically for marketing and PR agencies who want to resell AI presence audits under their own brand. We provide fully unbranded reports with your logo and color scheme, volume pricing, and a dedicated account manager. Several agencies already include our audits as a standard part of their new client onboarding.</p>
-      </div>
-    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Do you offer white-label reports for agencies?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>Yes. Our Enterprise tier is built specifically for marketing and PR agencies who want to resell AI presence audits under their own brand. We provide fully unbranded reports with your logo and color scheme, volume pricing, and a dedicated account manager. Several agencies already include our audits as a standard part of their new client onboarding.</p>
+      </div>
+    </div>
 
 
-  </div>
+  </div>
 </section>
 
 
 <!-- INQUIRY FORM -->
 <section class="inquiry-section" id="contact">
-  <div class="inquiry-left">
-    <div class="section-eyebrow">Contact</div>
-    <h2>Let's talk about your <em>AI presence.</em></h2>
-    <p>Fill out the form and we'll get back to you within one business day with a tailored recommendation and a free mini-audit of your brand on two AI platforms.</p>
+  <div class="inquiry-left">
+    <div class="section-eyebrow">Contact</div>
+    <h2>Let's talk about your <em>AI presence.</em></h2>
+    <p>Fill out the form and we'll get back to you within one business day with a tailored recommendation and a free mini-audit of your brand on two AI platforms.</p>
 
 
-    <div class="contact-detail">
-      <div class="contact-icon">✉</div>
-      <span>hello@prompttrace.io</span>
-    </div>
-    <div class="contact-detail">
-      <div class="contact-icon">⏱</div>
-      <span>Response within 1 business day</span>
-    </div>
-    <div class="contact-detail">
-      <div class="contact-icon">🔒</div>
-      <span>Your data is never shared or sold</span>
-    </div>
-  </div>
+    <div class="contact-detail">
+      <div class="contact-icon">✉</div>
+      <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8be3eee7e7e4cbfbf9e4e6fbfffff9eae8eea5e2e4">[email&#160;protected]</a></span>
+    </div>
+    <div class="contact-detail">
+      <div class="contact-icon">⏱</div>
+      <span>Response within 1 business day</span>
+    </div>
+    <div class="contact-detail">
+      <div class="contact-icon">🔒</div>
+      <span>Your data is never shared or sold</span>
+    </div>
+  </div>
 
 
-  <div class="inquiry-form" id="inquiryFormWrap">
-    <div id="inquiryFormInner">
-      <div class="form-row">
-        <div class="form-group">
-          <label>First Name</label>
-          <input type="text" placeholder="Jane">
-        </div>
-        <div class="form-group">
-          <label>Last Name</label>
-          <input type="text" placeholder="Smith">
-        </div>
-      </div>
+  <div class="inquiry-form" id="inquiryFormWrap">
+    <div id="inquiryFormInner">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="Jane">
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Smith">
+        </div>
+      </div>
 
 
-      <div class="form-row">
-        <div class="form-group">
-          <label>Work Email</label>
-          <input type="email" placeholder="jane@company.com">
-        </div>
-        <div class="form-group">
-          <label>Company Name</label>
-          <input type="text" placeholder="Acme Corp">
-        </div>
-      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Work Email</label>
+          <input type="email" placeholder="jane@company.com">
+        </div>
+        <div class="form-group">
+          <label>Company Name</label>
+          <input type="text" placeholder="Acme Corp">
+        </div>
+      </div>
 
 
-      <div class="form-group">
-        <label>Your Role</label>
-        <input type="text" placeholder="CMO, Head of Marketing, Founder...">
-      </div>
+      <div class="form-group">
+        <label>Your Role</label>
+        <input type="text" placeholder="CMO, Head of Marketing, Founder...">
+      </div>
 
 
-      <div class="form-group">
-        <label>Which package interests you?</label>
-        <select>
-          <option value="" disabled selected style="color:#666">Select a package</option>
-          <option>Brand Snapshot — $500</option>
-          <option>Competitive Intelligence — $1,800</option>
-          <option>Ongoing Monitoring — $900/mo</option>
-          <option>Enterprise / Agency — Custom</option>
-          <option>Not sure yet — just exploring</option>
-        </select>
-      </div>
+      <div class="form-group">
+        <label>Which package interests you?</label>
+        <select>
+          <option value="" disabled selected style="color:#666">Select a package</option>
+          <option>Brand Snapshot — $500</option>
+          <option>Competitive Intelligence — $1,800</option>
+          <option>Ongoing Monitoring — $900/mo</option>
+          <option>Enterprise / Agency — Custom</option>
+          <option>Not sure yet — just exploring</option>
+        </select>
+      </div>
 
 
-      <div class="form-group">
-        <label>Top competitors (optional)</label>
-        <input type="text" placeholder="e.g. Competitor A, Competitor B">
-      </div>
+      <div class="form-group">
+        <label>Top competitors (optional)</label>
+        <input type="text" placeholder="e.g. Competitor A, Competitor B">
+      </div>
 
 
-      <div class="form-group">
-        <label>Tell us about your goal</label>
-        <textarea placeholder="What prompted you to reach out? Any specific concerns about how AI describes your brand or competitors?"></textarea>
-      </div>
+      <div class="form-group">
+        <label>Tell us about your goal</label>
+        <textarea placeholder="What prompted you to reach out? Any specific concerns about how AI describes your brand or competitors?"></textarea>
+      </div>
 
 
-      <button class="form-submit" onclick="submitForm()">Send Inquiry →</button>
-      <p class="form-note">No spam. No sales pressure. Just a conversation.</p>
-    </div>
+      <button class="form-submit" onclick="submitForm()">Send Inquiry →</button>
+      <p class="form-note">No spam. No sales pressure. Just a conversation.</p>
+    </div>
 
 
-    <div class="form-success" id="formSuccess">
-      <div class="success-icon">✦</div>
-      <h3>Inquiry received!</h3>
-      <p>We'll review your details and send over a free mini-audit within 48 hours. Keep an eye on your inbox.</p>
-    </div>
-  </div>
+    <div class="form-success" id="formSuccess">
+      <div class="success-icon">✦</div>
+      <h3>Inquiry received!</h3>
+      <p>We'll review your details and send over a free mini-audit within 48 hours. Keep an eye on your inbox.</p>
+    </div>
+  </div>
 </section>
 
 
 <!-- CTA -->
 <section class="cta-section" id="cta-bottom">
-  <div class="section-eyebrow" style="justify-content:center; margin-bottom:24px;">Get Started</div>
-  <h2>Find out what AI<br><em>says about you today.</em></h2>
-  <p>Enter your email and we'll send you a free mini-audit of your brand across two AI platforms — no commitment required.</p>
+  <div class="section-eyebrow" style="justify-content:center; margin-bottom:24px;">Get Started</div>
+  <h2>Find out what AI<br><em>says about you today.</em></h2>
+  <p>Enter your email and we'll send you a free mini-audit of your brand across two AI platforms — no commitment required.</p>
 
 
-  <div class="cta-form">
-    <input type="email" class="cta-input" placeholder="your@company.com">
-    <input type="text" class="cta-input" placeholder="Your company name">
-    <button class="btn-primary" style="padding: 16px 40px; cursor:pointer; border:none;">Get Free Sample Audit →</button>
-  </div>
+  <div class="cta-form">
+    <input type="email" class="cta-input" placeholder="your@company.com">
+    <input type="text" class="cta-input" placeholder="Your company name">
+    <button class="btn-primary" style="padding: 16px 40px; cursor:pointer; border:none;">Get Free Sample Audit →</button>
+  </div>
 
 
-  <p style="margin-top: 20px; font-family:'DM Mono',monospace; font-size:0.72rem; color: var(--muted);">No spam. No credit card. Results in 48 hours.</p>
+  <p style="margin-top: 20px; font-family:'DM Mono',monospace; font-size:0.72rem; color: var(--muted);">No spam. No credit card. Results in 48 hours.</p>
 </section>
 
 
 <!-- FOOTER -->
 <footer>
-  <div class="logo">Prompt<span>Trace</span></div>
-  <p>© 2025 PromptTrace. AI Presence Intelligence.</p>
-  <div class="footer-links">
-    <a href="#">Privacy</a>
-    <a href="#">Terms</a>
-    <a href="#">Contact</a>
-  </div>
+  <div class="logo">Prompt<span>Trace</span></div>
+  <p>© 2025 PromptTrace. AI Presence Intelligence.</p>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Contact</a>
+  </div>
 </footer>
-<script>
-  function toggleFaq(btn) {
-    const item = btn.closest('.faq-item');
-    const isOpen = item.classList.contains('open');
-    // Close all
-    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
-    // Open clicked if it was closed
-    if (!isOpen) item.classList.add('open');
-  }
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    // Open clicked if it was closed
+    if (!isOpen) item.classList.add('open');
+  }
 
 
-  function submitForm() {
-    const inner = document.getElementById('inquiryFormInner');
-    const success = document.getElementById('formSuccess');
-    inner.style.display = 'none';
-    success.style.display = 'block';
-  }
-</script>
-
-
-</body>
-</html>
+  function submitForm() {
