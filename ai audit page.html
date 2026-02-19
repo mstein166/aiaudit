@@ -1,0 +1,1440 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.4">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1">&lt;title&gt;PromptTrace — AI Presence Intelligence&lt;/title&gt;</p>
+<p class="p1">&lt;link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Mono:wght@300;400;500&amp;family=DM+Sans:wght@300;400;500&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>:root {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--bg: #0a0a0f;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--surface: #111118;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--surface2: #1a1a24;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--accent: #e8ff47;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--accent2: #47c4ff;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--accent3: #ff6b47;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--text: #f0f0f0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--muted: #666680;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--border: rgba(255,255,255,0.07);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>* { margin: 0; padding: 0; box-sizing: border-box; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>html { scroll-behavior: smooth; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--bg);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Sans', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 300;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>overflow-x: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* NOISE OVERLAY */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>body::before {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>content: '';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: fixed;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>inset: 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>pointer-events: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>z-index: 999;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>opacity: 0.4;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* NAV */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>nav {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: fixed;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>top: 0; left: 0; right: 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>z-index: 100;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>justify-content: space-between;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 20px 60px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>backdrop-filter: blur(20px);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: rgba(10,10,15,0.8);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-bottom: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.logo {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 800;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 1.3rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: -0.02em;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.logo span { color: var(--accent); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>nav ul {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>list-style: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 40px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>nav ul a {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-decoration: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.875rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 400;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: color 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>nav ul a:hover { color: var(--text); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.nav-cta {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: #0a0a0f !important;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 9px 20px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 500 !important;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.2s !important;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.nav-cta:hover { background: #fff !important; color: #0a0a0f !important; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* HERO */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>min-height: 100vh;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>flex-direction: column;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 120px 60px 80px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-glow {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 600px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 600px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: radial-gradient(circle, rgba(232,255,71,0.08) 0%, transparent 70%);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>top: 10%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>right: -100px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>pointer-events: none;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-glow2 {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 400px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 400px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: radial-gradient(circle, rgba(71,196,255,0.06) 0%, transparent 70%);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>bottom: 10%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>left: 5%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>pointer-events: none;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-eyebrow {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.75rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: 0.15em;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-transform: uppercase;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 24px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>opacity: 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>animation: fadeUp 0.8s 0.1s forwards;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-eyebrow::before {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>content: '';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 32px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 1px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>h1 {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 800;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: clamp(3rem, 7vw, 6.5rem);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 0.95;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: -0.03em;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>max-width: 900px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>opacity: 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>animation: fadeUp 0.8s 0.2s forwards;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>h1 .highlight {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: inline-block;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-sub {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 1.15rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>max-width: 520px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.7;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 32px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 300;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>opacity: 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>animation: fadeUp 0.8s 0.35s forwards;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-actions {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 48px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>opacity: 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>animation: fadeUp 0.8s 0.5s forwards;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.btn-primary {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: #0a0a0f;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 16px 36px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.95rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: 0.01em;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-decoration: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: inline-block;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.btn-primary:hover { background: #fff; transform: translateY(-2px); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.btn-secondary {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: transparent;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 16px 36px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 600;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.95rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-decoration: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: inline-flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.btn-secondary:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* TERMINAL DEMO */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.terminal-wrapper {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 80px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>opacity: 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>animation: fadeUp 0.8s 0.7s forwards;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.terminal {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>max-width: 720px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.terminal-bar {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface2);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 12px 16px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-bottom: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.dot { width: 10px; height: 10px; border-radius: 50%; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.dot-r { background: #ff5f57; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.dot-y { background: #febc2e; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.dot-g { background: #28c840; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.terminal-label {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-left: auto;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.7rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.terminal-body {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 24px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.8rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.8;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.t-prompt { color: var(--accent); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.t-text { color: #a0a0c0; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.t-positive { color: #47ff9a; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.t-negative { color: var(--accent3); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.t-neutral { color: var(--accent2); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.t-label { color: var(--muted); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.t-score { font-weight: 500; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* STATS */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stats-bar {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-top: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-bottom: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 32px 60px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: grid;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>grid-template-columns: repeat(4, 1fr);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 0 40px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-right: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat:first-child { padding-left: 0; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat:last-child { border-right: none; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat-num {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 2.8rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 800;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: -0.03em;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat-label {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.8rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* HOW IT WORKS */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>section {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 100px 60px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.section-eyebrow {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.72rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: 0.15em;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-transform: uppercase;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.section-eyebrow::before {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>content: '';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 32px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 1px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>h2 {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 800;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: clamp(2rem, 4vw, 3.5rem);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: -0.03em;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.05;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>max-width: 700px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 60px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>h2 em { color: var(--accent); font-style: normal; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* STEPS */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.steps {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: grid;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>grid-template-columns: repeat(3, 1fr);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 2px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.step {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 40px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: background 0.3s;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.step:hover { background: var(--surface2); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.step-num {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 4rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 800;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: rgba(232,255,71,0.12);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 24px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: -0.05em;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.step h3 {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 1.25rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.step p {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.9rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.7;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* SERVICES */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.services-grid {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: grid;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>grid-template-columns: repeat(2, 1fr);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 2px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.service-card {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 48px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.3s;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.service-card::before {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>content: '';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>top: 0; left: 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 3px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: height 0.3s;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.service-card:hover::before { height: 100%; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.service-card:hover { background: var(--surface2); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.service-tag {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.7rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: 0.1em;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-transform: uppercase;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.service-card h3 {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 1.5rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: -0.02em;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.service-card p {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.7;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.9rem;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.service-price {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 28px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding-top: 28px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-top: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 1.5rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.service-price span {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.8rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Sans', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 300;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* SAMPLE REPORT */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.report-section {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 100px 60px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-top: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-bottom: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.report-grid {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: grid;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>grid-template-columns: 1fr 1fr;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 40px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: start;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.report-card {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--bg);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 32px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.report-card h4 {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.85rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-transform: uppercase;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: 0.08em;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>justify-content: space-between;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.badge {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.65rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 3px 8px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: rgba(232,255,71,0.15);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: 0.05em;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.sentiment-bar {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.sentiment-bar-label {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>justify-content: space-between;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.8rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.sentiment-bar-label .brand { color: var(--text); font-weight: 500; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.sentiment-bar-label .score { color: var(--muted); font-family: 'DM Mono', monospace; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.bar-track {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: rgba(255,255,255,0.06);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.bar-fill {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: width 1s ease;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.bar-positive { background: #47ff9a; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.bar-neutral { background: var(--accent2); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.bar-negative { background: var(--accent3); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.mention-item {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 16px 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-bottom: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.85rem;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.mention-item:last-child { border-bottom: none; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.mention-header {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>justify-content: space-between;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.mention-query { color: var(--accent2); font-family: 'DM Mono', monospace; font-size: 0.75rem; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.mention-sentiment { font-size: 0.7rem; padding: 2px 8px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.ms-positive { background: rgba(71,255,154,0.15); color: #47ff9a; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.ms-negative { background: rgba(255,107,71,0.15); color: var(--accent3); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.ms-neutral { background: rgba(71,196,255,0.15); color: var(--accent2); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.mention-text { color: var(--muted); line-height: 1.5; font-size: 0.82rem; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* TESTIMONIALS */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.testimonials {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: grid;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>grid-template-columns: repeat(3, 1fr);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 2px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 60px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.testimonial {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 40px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.testimonial-quote {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.95rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.7;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: #c0c0d0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 28px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-style: italic;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.testimonial-author {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 14px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.author-avatar {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 40px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 40px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 800;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.85rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: #0a0a0f;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.author-name { font-weight: 500; font-size: 0.9rem; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.author-title { color: var(--muted); font-size: 0.78rem; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* CTA */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.cta-section {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 120px 60px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.cta-section::before {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>content: '';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 800px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 400px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: radial-gradient(ellipse, rgba(232,255,71,0.06) 0%, transparent 70%);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>top: 50%; left: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transform: translate(-50%, -50%);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>pointer-events: none;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.cta-section h2 { margin: 0 auto 24px; text-align: center; max-width: 700px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.cta-section p { color: var(--muted); max-width: 500px; margin: 0 auto 48px; line-height: 1.7; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.cta-form {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>flex-wrap: wrap;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.cta-input {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 16px 24px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.9rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Sans', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 280px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>outline: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: border-color 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.cta-input:focus { border-color: var(--accent); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.cta-input::placeholder { color: var(--muted); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* FOOTER */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>footer {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 40px 60px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-top: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>justify-content: space-between;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>footer p { color: var(--muted); font-size: 0.8rem; font-family: 'DM Mono', monospace; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.footer-links { display: flex; gap: 32px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.footer-links a { color: var(--muted); text-decoration: none; font-size: 0.8rem; font-family: 'DM Mono', monospace; transition: color 0.2s; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.footer-links a:hover { color: var(--text); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* FAQ */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.faq-section {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 100px 60px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-top: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.faq-grid {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: grid;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>grid-template-columns: 1fr 1fr;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 2px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.faq-item {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--bg);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: background 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.faq-item:hover { background: var(--surface2); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.faq-question {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 1rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 600;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-align: left;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 28px 32px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>justify-content: space-between;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: -0.01em;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.faq-icon {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 24px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 24px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>flex-shrink: 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 1rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: transform 0.3s, background 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.faq-item.open .faq-icon {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transform: rotate(45deg);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: #0a0a0f;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.faq-answer {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>max-height: 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: max-height 0.4s ease, padding 0.3s;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 0 32px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.faq-item.open .faq-answer {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>max-height: 300px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 0 32px 28px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.faq-answer p {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.9rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.75;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-top: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding-top: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* INQUIRY FORM */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.inquiry-section {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 100px 60px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: grid;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>grid-template-columns: 1fr 1.4fr;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 80px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: start;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.inquiry-left h2 { margin-bottom: 20px; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.inquiry-left p {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.75;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.95rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 40px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.contact-detail {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 14px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.contact-icon {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 36px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 36px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.85rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>flex-shrink: 0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.contact-detail span {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.8rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.inquiry-form {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 48px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-row {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: grid;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>grid-template-columns: 1fr 1fr;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>gap: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group label {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: block;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.7rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: 0.1em;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-transform: uppercase;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group input,</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group select,</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group textarea {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--bg);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 13px 16px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.9rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Sans', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>outline: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: border-color 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>-webkit-appearance: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>appearance: none;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group input:focus,</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group select:focus,</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group textarea:focus { border-color: var(--accent); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group input::placeholder,</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group textarea::placeholder { color: var(--muted); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group select option { background: var(--surface); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-group textarea {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>resize: vertical;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>min-height: 110px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.6;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-submit {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: #0a0a0f;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 1rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: 0.01em;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-submit:hover { background: #fff; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-note {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'DM Mono', monospace;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 0.7rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-success {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>padding: 40px 20px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-success .success-icon { font-size: 2.5rem; margin-bottom: 16px; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-success h3 {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Syne', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-size: 1.4rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.form-success p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* ANIMATIONS */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>@keyframes fadeUp {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>from { opacity: 0; transform: translateY(20px); }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>to { opacity: 1; transform: translateY(0); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>@keyframes blink {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>0%, 100% { opacity: 1; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>50% { opacity: 0; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.cursor {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display: inline-block;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>width: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height: 14px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background: var(--accent);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>animation: blink 1.2s infinite;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>vertical-align: middle;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* RESPONSIVE */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>@media (max-width: 900px) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>nav { padding: 16px 24px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>nav ul { display: none; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.hero, section { padding-left: 24px; padding-right: 24px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.stats-bar { grid-template-columns: repeat(2, 1fr); padding: 24px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.steps, .services-grid, .report-grid, .testimonials { grid-template-columns: 1fr; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.stat { border-right: none; border-bottom: 1px solid var(--border); padding: 20px 0; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>footer { flex-direction: column; gap: 20px; text-align: center; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.report-section, .cta-section { padding-left: 24px; padding-right: 24px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.faq-grid { grid-template-columns: 1fr; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.inquiry-section { grid-template-columns: 1fr; gap: 40px; padding-left: 24px; padding-right: 24px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.form-row { grid-template-columns: 1fr; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.faq-section { padding-left: 24px; padding-right: 24px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.inquiry-form { padding: 28px 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- NAV --&gt;</p>
+<p class="p1">&lt;nav&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="logo"&gt;Prompt&lt;span&gt;Trace&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;li&gt;&lt;a href="#how"&gt;How It Works&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;li&gt;&lt;a href="#services"&gt;Services&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;li&gt;&lt;a href="#sample"&gt;Sample Report&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;li&gt;&lt;a href="#faq"&gt;FAQ&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;li&gt;&lt;a href="#contact" class="nav-cta"&gt;Get Audited&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/ul&gt;</p>
+<p class="p1">&lt;/nav&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- HERO --&gt;</p>
+<p class="p1">&lt;section class="hero"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="hero-glow"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="hero-glow2"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="hero-eyebrow"&gt;AI Presence Intelligence&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>What does AI&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>say about your&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;span class="highlight"&gt;business?&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/h1&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;p class="hero-sub"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>Millions of customers now ask AI chatbots for recommendations instead of Googling. PromptTrace audits exactly how Claude, ChatGPT, and Gemini describe you — and your competitors.</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="hero-actions"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;a href="#contact" class="btn-primary"&gt;Request Free Sample Audit&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;a href="#sample" class="btn-secondary"&gt;↓ See Sample Report&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="terminal-wrapper"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="terminal"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="terminal-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="dot dot-r"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="dot dot-y"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="dot dot-g"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="terminal-label"&gt;prompttrace — live audit&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="terminal-body"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;span class="t-prompt"&gt;›&lt;/span&gt; &lt;span class="t-text"&gt;Running AI audit for: &lt;strong style="color:#f0f0f0"&gt;Acme SaaS Co.&lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;span class="t-label"&gt;Querying ChatGPT-4o...&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;span class="t-label"&gt;Query:&lt;/span&gt; &lt;span class="t-neutral"&gt;"What's the best project management tool for startups?"&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;span class="t-label"&gt;Result:&lt;/span&gt; &lt;span class="t-positive"&gt;MENTIONED — Position #2&lt;/span&gt; &lt;span class="t-label"&gt;| Sentiment:&lt;/span&gt; &lt;span class="t-positive t-score"&gt;+0.74 (Positive)&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;span class="t-label"&gt;Querying Claude 3.7...&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;span class="t-label"&gt;Query:&lt;/span&gt; &lt;span class="t-neutral"&gt;"Compare Acme SaaS vs. Rival Corp for enterprise teams"&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;span class="t-label"&gt;Result:&lt;/span&gt; &lt;span class="t-negative"&gt;COMPETITOR PREFERRED&lt;/span&gt; &lt;span class="t-label"&gt;| Sentiment:&lt;/span&gt; &lt;span class="t-negative t-score"&gt;−0.31 (Negative)&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;span class="t-label"&gt;Querying Gemini Ultra...&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;span class="t-label"&gt;Query:&lt;/span&gt; &lt;span class="t-neutral"&gt;"Best tools for remote team collaboration?"&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;span class="t-label"&gt;Result:&lt;/span&gt; &lt;span class="t-neutral"&gt;NOT MENTIONED&lt;/span&gt; &lt;span class="t-label"&gt;| Visibility gap detected&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;span class="t-prompt"&gt;›&lt;/span&gt; &lt;span class="t-text"&gt;Audit complete. Generating report...&lt;/span&gt; &lt;span class="cursor"&gt;&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- STATS --&gt;</p>
+<p class="p1">&lt;div class="stats-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="stat"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat-num"&gt;67%&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat-label"&gt;of consumers use AI for purchase recommendations&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="stat"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat-num"&gt;5+&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat-label"&gt;major AI models audited per engagement&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="stat"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat-num"&gt;200+&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat-label"&gt;unique query variations tested per brand&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="stat"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat-num"&gt;48hr&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat-label"&gt;turnaround on standard audit reports&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- HOW IT WORKS --&gt;</p>
+<p class="p1">&lt;section id="how"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="section-eyebrow"&gt;Process&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;Your brand. Under the &lt;em&gt;AI microscope.&lt;/em&gt;&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="steps"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="step"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="step-num"&gt;01&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h3&gt;Discovery Brief&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;We learn your brand, key competitors, target audience, and the queries your customers are most likely to type into AI tools. You define what winning looks like.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="step"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="step-num"&gt;02&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h3&gt;Multi-Model Audit&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;Our team runs hundreds of carefully crafted prompts across ChatGPT, Claude, Gemini, Perplexity, and Copilot — capturing raw outputs, sentiment scores, and competitive positioning.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="step"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="step-num"&gt;03&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h3&gt;Intelligence Report&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;You receive a comprehensive report with sentiment scoring, visibility gaps, competitor analysis, and a concrete action plan to improve your AI presence over time.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- SERVICES --&gt;</p>
+<p class="p1">&lt;section id="services" style="padding-top: 0;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="section-eyebrow"&gt;Services&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;Audit packages for every &lt;em&gt;stage of growth.&lt;/em&gt;&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="services-grid"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="service-card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="service-tag"&gt;Starter&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h3&gt;Brand Snapshot&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;A focused audit of your brand across 3 AI models and 50 targeted queries. Ideal for businesses new to AI presence management who want a clear baseline before investing more.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="margin-top: 20px;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;3 AI models (ChatGPT, Claude, Gemini)&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;50 query variations&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;Sentiment scoring &amp; summary&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted);"&gt;✓ &amp;nbsp;1 competitor comparison&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="service-price"&gt;$500 &lt;span&gt;/ one-time&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="service-card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="service-tag"&gt;Professional&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h3&gt;Competitive Intelligence&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;Deep-dive audit across 5 AI platforms with full competitor benchmarking. Includes a strategic action plan with specific recommendations to close visibility gaps and shift sentiment.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="margin-top: 20px;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;5 AI models including Perplexity &amp; Copilot&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;200 query variations&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;Up to 5 competitors analyzed&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted);"&gt;✓ &amp;nbsp;Action plan + 60-min strategy call&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="service-price"&gt;$1,800 &lt;span&gt;/ one-time&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="service-card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="service-tag"&gt;Retainer&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h3&gt;Ongoing Monitoring&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;Monthly audits to track how your AI presence evolves over time. As AI models update, your perception changes. Stay ahead with continuous monitoring and quarterly strategy reviews.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="margin-top: 20px;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;Monthly full-platform audits&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;Trend tracking &amp; delta reports&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;Quarterly strategy sessions&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted);"&gt;✓ &amp;nbsp;Slack/email alerts on major shifts&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="service-price"&gt;$900 &lt;span&gt;/ month&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="service-card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="service-tag"&gt;Enterprise&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h3&gt;Custom Program&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;For enterprise brands, agencies, or multi-brand portfolios. Custom query sets, industry-specific AI analysis, white-label reporting for agencies, and dedicated analyst support.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="margin-top: 20px;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;All platforms + custom models&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;White-label reports for agencies&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted); margin-bottom: 8px;"&gt;✓ &amp;nbsp;Multi-brand / multi-market coverage&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-size:0.8rem; color:var(--muted);"&gt;✓ &amp;nbsp;Dedicated analyst + SLA&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="service-price"&gt;Custom &lt;span&gt;/ contact us&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- SAMPLE REPORT --&gt;</p>
+<p class="p1">&lt;div class="report-section" id="sample"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="section-eyebrow"&gt;Sample Output&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2 style="max-width:700px; margin-bottom: 48px;"&gt;A glimpse into your &lt;em&gt;AI presence report.&lt;/em&gt;&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="report-grid"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="report-card" style="margin-bottom: 16px;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h4&gt;Sentiment Scores — ChatGPT &lt;span class="badge"&gt;LIVE SAMPLE&lt;/span&gt;&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="sentiment-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="sentiment-bar-label"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="brand"&gt;Acme SaaS&lt;/span&gt;&lt;span class="score"&gt;+0.74&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="bar-track"&gt;&lt;div class="bar-fill bar-positive" style="width:74%"&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="sentiment-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="sentiment-bar-label"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="brand"&gt;Rival Corp&lt;/span&gt;&lt;span class="score"&gt;+0.81&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="bar-track"&gt;&lt;div class="bar-fill bar-positive" style="width:81%"&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="sentiment-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="sentiment-bar-label"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="brand"&gt;AltTools Inc&lt;/span&gt;&lt;span class="score"&gt;+0.55&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="bar-track"&gt;&lt;div class="bar-fill bar-neutral" style="width:55%"&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="sentiment-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="sentiment-bar-label"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="brand"&gt;GenericSoft&lt;/span&gt;&lt;span class="score"&gt;+0.22&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="bar-track"&gt;&lt;div class="bar-fill bar-negative" style="width:22%"&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="report-card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h4&gt;Visibility Rate by Platform&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="sentiment-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="sentiment-bar-label"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="brand"&gt;ChatGPT&lt;/span&gt;&lt;span class="score"&gt;82%&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="bar-track"&gt;&lt;div class="bar-fill bar-positive" style="width:82%"&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="sentiment-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="sentiment-bar-label"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="brand"&gt;Claude&lt;/span&gt;&lt;span class="score"&gt;61%&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="bar-track"&gt;&lt;div class="bar-fill bar-neutral" style="width:61%"&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="sentiment-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="sentiment-bar-label"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="brand"&gt;Gemini&lt;/span&gt;&lt;span class="score"&gt;44%&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="bar-track"&gt;&lt;div class="bar-fill bar-neutral" style="width:44%"&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="sentiment-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="sentiment-bar-label"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="brand"&gt;Perplexity&lt;/span&gt;&lt;span class="score"&gt;29%&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="bar-track"&gt;&lt;div class="bar-fill bar-negative" style="width:29%"&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="report-card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h4&gt;Notable AI Responses&lt;/h4&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mention-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mention-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="mention-query"&gt;"best CRM for B2B startups"&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="mention-sentiment ms-positive"&gt;Positive&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;p class="mention-text"&gt;Claude ranked Acme SaaS first among 5 tools, citing ease of onboarding and pipeline visibility as key differentiators vs Salesforce.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mention-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mention-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="mention-query"&gt;"Acme vs Rival Corp — which is better?"&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="mention-sentiment ms-negative"&gt;Negative&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;p class="mention-text"&gt;ChatGPT recommended Rival Corp for enterprise teams, noting Acme's reported "limited integrations" — an outdated perception tied to 2022 articles.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mention-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mention-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="mention-query"&gt;"affordable project tools for agencies"&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="mention-sentiment ms-neutral"&gt;Neutral&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;p class="mention-text"&gt;Gemini listed Acme alongside 4 competitors with no strong differentiation. Opportunity to improve category positioning through content strategy.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mention-item" style="border-bottom:none"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mention-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="mention-query"&gt;"top SaaS tools 2024 for remote teams"&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="mention-sentiment ms-negative"&gt;Not Mentioned&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;p class="mention-text"&gt;Perplexity did not surface Acme in this high-intent category despite strong product fit. Gap likely caused by thin web citation coverage.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- TESTIMONIALS --&gt;</p>
+<p class="p1">&lt;section&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="section-eyebrow"&gt;Social Proof&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;Trusted by brands who take &lt;em&gt;AI visibility seriously.&lt;/em&gt;&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="testimonials"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="testimonial"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="testimonial-quote"&gt;"We assumed our AI presence was fine because our SEO was strong. PromptTrace showed us that ChatGPT was actually recommending our biggest competitor over us in 7 out of 10 relevant queries. Eye-opening."&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="testimonial-author"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="author-avatar" style="background: var(--accent);"&gt;JM&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="author-name"&gt;Jamie M.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="author-title"&gt;CMO, TechStack Pro&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="testimonial"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="testimonial-quote"&gt;"The competitive benchmarking alone was worth 10x the cost. We found out a competitor was consistently ranked #1 in Claude responses because of one widely cited study. We published a better one within a month."&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="testimonial-author"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="author-avatar" style="background: var(--accent2);"&gt;SR&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="author-name"&gt;Sarah R.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="author-title"&gt;VP Marketing, NovaPlatform&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="testimonial"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="testimonial-quote"&gt;"As an agency we now offer AI presence audits to every new client as part of our onboarding. We white-label PromptTrace reports and it's become a genuine differentiator for us."&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="testimonial-author"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="author-avatar" style="background: var(--accent3);"&gt;DK&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="author-name"&gt;David K.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="author-title"&gt;Founder, Apex Growth Agency&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- FAQ --&gt;</p>
+<p class="p1">&lt;section class="faq-section" id="faq"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="section-eyebrow"&gt;FAQ&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2 style="margin-bottom: 48px;"&gt;Questions we &lt;em&gt;always get asked.&lt;/em&gt;&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="faq-grid"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="faq-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="faq-question" onclick="toggleFaq(this)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>How is this different from regular SEO?</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="faq-icon"&gt;+&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="faq-answer"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;SEO optimizes your visibility on search engines like Google, where rankings are based on links, keywords, and technical factors. AI presence is entirely different — chatbots like Claude and ChatGPT form opinions based on their training data, cited articles, and how your brand is discussed across the web. You can have perfect SEO and still be described negatively (or not at all) by AI tools. We focus exclusively on this AI layer.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="faq-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="faq-question" onclick="toggleFaq(this)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>Which AI platforms do you audit?</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="faq-icon"&gt;+&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="faq-answer"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Our standard audits cover ChatGPT (GPT-4o), Claude (Anthropic), Google Gemini, Perplexity AI, and Microsoft Copilot. These five represent the vast majority of AI-assisted consumer and business decision-making today. Enterprise clients can request additional or custom platforms.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="faq-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="faq-question" onclick="toggleFaq(this)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>Can you actually change what AI says about us?</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="faq-icon"&gt;+&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="faq-answer"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;We can't directly edit AI models — nobody can. But AI outputs are heavily influenced by what's published and cited online. Our action plans identify the specific content gaps, outdated references, and missing citations that are shaping your current AI perception — and we show you exactly what to create or update to shift it over time.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="faq-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="faq-question" onclick="toggleFaq(this)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>How long does an audit take?</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="faq-icon"&gt;+&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="faq-answer"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;The Brand Snapshot delivers within 48 hours. The Competitive Intelligence package takes 5–7 business days due to the volume of queries, competitor analysis, and strategy documentation. Ongoing retainer reports are delivered on the same date each month with a 3-day SLA for emergency alerts.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="faq-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="faq-question" onclick="toggleFaq(this)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>Do AI models get updated? Will our report go stale?</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="faq-icon"&gt;+&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="faq-answer"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Yes — this is exactly why our retainer exists. AI models are updated every few months, and their outputs can shift noticeably with each update. A competitor publishing a widely-cited study can change AI sentiment toward you within weeks. One-time audits give you a snapshot; monthly monitoring keeps you informed as the landscape evolves.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="faq-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="faq-question" onclick="toggleFaq(this)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>Do you offer white-label reports for agencies?</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="faq-icon"&gt;+&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="faq-answer"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Yes. Our Enterprise tier is built specifically for marketing and PR agencies who want to resell AI presence audits under their own brand. We provide fully unbranded reports with your logo and color scheme, volume pricing, and a dedicated account manager. Several agencies already include our audits as a standard part of their new client onboarding.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- INQUIRY FORM --&gt;</p>
+<p class="p1">&lt;section class="inquiry-section" id="contact"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="inquiry-left"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-eyebrow"&gt;Contact&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h2&gt;Let's talk about your &lt;em&gt;AI presence.&lt;/em&gt;&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;Fill out the form and we'll get back to you within one business day with a tailored recommendation and a free mini-audit of your brand on two AI platforms.&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="contact-detail"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="contact-icon"&gt;✉&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;span&gt;hello@prompttrace.io&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="contact-detail"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="contact-icon"&gt;⏱&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;span&gt;Response within 1 business day&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="contact-detail"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="contact-icon"&gt;🔒&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;span&gt;Your data is never shared or sold&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="inquiry-form" id="inquiryFormWrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="inquiryFormInner"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="form-row"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;label&gt;First Name&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;input type="text" placeholder="Jane"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;label&gt;Last Name&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;input type="text" placeholder="Smith"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="form-row"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;label&gt;Work Email&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;input type="email" placeholder="jane@company.com"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;label&gt;Company Name&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;input type="text" placeholder="Acme Corp"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="form-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label&gt;Your Role&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="text" placeholder="CMO, Head of Marketing, Founder..."&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="form-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label&gt;Which package interests you?&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="" disabled selected style="color:#666"&gt;Select a package&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option&gt;Brand Snapshot — $500&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option&gt;Competitive Intelligence — $1,800&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option&gt;Ongoing Monitoring — $900/mo&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option&gt;Enterprise / Agency — Custom&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option&gt;Not sure yet — just exploring&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="form-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label&gt;Top competitors (optional)&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="text" placeholder="e.g. Competitor A, Competitor B"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="form-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label&gt;Tell us about your goal&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;textarea placeholder="What prompted you to reach out? Any specific concerns about how AI describes your brand or competitors?"&gt;&lt;/textarea&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="form-submit" onclick="submitForm()"&gt;Send Inquiry →&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="form-note"&gt;No spam. No sales pressure. Just a conversation.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="form-success" id="formSuccess"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="success-icon"&gt;✦&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h3&gt;Inquiry received!&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;We'll review your details and send over a free mini-audit within 48 hours. Keep an eye on your inbox.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- CTA --&gt;</p>
+<p class="p1">&lt;section class="cta-section" id="cta-bottom"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="section-eyebrow" style="justify-content:center; margin-bottom:24px;"&gt;Get Started&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;Find out what AI&lt;br&gt;&lt;em&gt;says about you today.&lt;/em&gt;&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;p&gt;Enter your email and we'll send you a free mini-audit of your brand across two AI platforms — no commitment required.&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="cta-form"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="email" class="cta-input" placeholder="your@company.com"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="text" class="cta-input" placeholder="Your company name"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn-primary" style="padding: 16px 40px; cursor:pointer; border:none;"&gt;Get Free Sample Audit →&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;p style="margin-top: 20px; font-family:'DM Mono',monospace; font-size:0.72rem; color: var(--muted);"&gt;No spam. No credit card. Results in 48 hours.&lt;/p&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- FOOTER --&gt;</p>
+<p class="p1">&lt;footer&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="logo"&gt;Prompt&lt;span&gt;Trace&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;p&gt;© 2025 PromptTrace. AI Presence Intelligence.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="footer-links"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;a href="#"&gt;Privacy&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;a href="#"&gt;Terms&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;a href="#"&gt;Contact&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/footer&gt;</p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>function toggleFaq(btn) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const item = btn.closest('.faq-item');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const isOpen = item.classList.contains('open');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Close all</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.querySelectorAll('.faq-item.open').forEach(el =&gt; el.classList.remove('open'));</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Open clicked if it was closed</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (!isOpen) item.classList.add('open');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function submitForm() {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const inner = document.getElementById('inquiryFormInner');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const success = document.getElementById('formSuccess');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>inner.style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>success.style.display = 'block';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
